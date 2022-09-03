@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getAllTasks, addTask, getTask, editTask, deleteTask } = require("../controllers/tasks")
+const { getAllTasks, addTask, getTask, editTask, deleteTask } = require("../controllers/task")
 
 // @route GET /task
 // @desc Get complete list of tasks
