@@ -1,21 +1,21 @@
 import { createContext, useEffect, useState } from "react";
-import axios from "axios";
+import { getAllTasks } from "../utils/apiUtils";
 
 export const AppContext = createContext();
 
-export const ContextProvider = ({ children }) => {
+export const AppProvider = ({ children }) => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tasks, setTasks] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
 
+  const setTasksList = async() => {
+    const res = await getAllTasks();
+    setTasks(res.data); 
+  }
+
   useEffect(() => {
-    axios
-      .get("/task")
-      .then((res) => {
-        setTasks(res.data);
-      })
-      .catch((err) => console.error(err.message));
+    setTasksList();
   }, []);
 
   return (

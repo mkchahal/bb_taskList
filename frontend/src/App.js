@@ -1,13 +1,12 @@
-import axios from "axios";
 import { Button, Input, Modal, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppContext } from "./context/AppContext";
 import { useContext } from "react";
-import { deleteTask } from "./utils/apiUtils";
+import { addTask, deleteTask } from "./utils/apiUtils";
 
 const App = () => {
   const {
-    title, 
+    title,
     setTitle,
     content,
     setContent,
@@ -55,8 +54,8 @@ const App = () => {
       title: "Are you sure you want to delete this task?",
       okText: "Yes",
       okType: "danger",
-      onOk: () => {
-        const res = deleteTask(task);
+      onOk: async () => {
+        const res = await deleteTask(task);
         const newArr = [...tasks].filter((task) => task._id !== res.data._id);
         setTasks(newArr);
       },
@@ -65,16 +64,12 @@ const App = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    axios
-      .post("/task", {
-        title,
-        content,
-      })
-      .then((res) => {
-        setTasks([...tasks, res.data]);
-        setTitle("");
-        setContent("");
-      });
+
+    const response = addTask(title, content);
+    setTasks([...tasks, response.data]);
+
+    setTitle("");
+    setContent("");
   };
 
   const handleEditTask = (task) => {
@@ -91,22 +86,6 @@ const App = () => {
 
   return (
     <>
-      <h1>To Do List</h1>
-      <form action="submit" onSubmit={(event) => handleSubmit(event)}>
-        <input
-          type="text"
-          value={title}
-          onChange={(event) => setTitle(event.target.value)}
-          placeholder="Add a Task..."
-        />
-        <textarea
-          cols="30"
-          rows="10"
-          placeholder="Add some related notes..."
-          value={content}
-          onChange={(event) => setContent(event.target.value)}
-        ></textarea>
-      </form>
       <Button type="onClick">+ Add a new task</Button>
       <Table columns={columns} dataSource={tasks} />
       <Modal
