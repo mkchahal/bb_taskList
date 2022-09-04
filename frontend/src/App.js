@@ -18,7 +18,7 @@ const App = () => {
   useEffect(() => {
     const listItems = [...tasks];
     listItems.map((item) => {
-      return Object.assign(item, { date: item.date.slice(0,10) }, { key: item._id });
+      return Object.assign(item, { date: item.updatedAt.slice(0, 10) }, { key: item._id });
     });
     setList(listItems);
   }, [tasks]);
@@ -38,7 +38,6 @@ const App = () => {
       key: 3,
       title: "Date",
       dataIndex: "date",
-      sorter: (a,b) => Date.parse(a.date) - Date.parse(b.date)
     },
     {
       key: 4,
@@ -86,12 +85,13 @@ const App = () => {
           TO DO LIST
         </Title>
       </Header>
-      <Layout style={{ margin: "5rem auto", gap: "2rem" }}>
-        <Button type="primary" shape="round" onClick={() => setIsAdding(true)}>
-          + Add a new task
-        </Button>
+      <Layout style={{ margin: "5rem auto", gap: "2rem"}}>
+        <Button shape="round">Sort by Date</Button>
         <AddModal />
         <Table columns={columns} dataSource={list} pagination={false}/>
+        <Button type="primary" shape="round" onClick={() => setIsAdding(true)}>
+          Add a new task
+        </Button>
         <EditModal id={activeTaskId}/>
       </Layout>
     </Layout>

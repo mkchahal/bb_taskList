@@ -10,7 +10,7 @@ export const AppProvider = ({ children }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
 
-  const setTasksList = async() => {
+  const setTasksList = async () => {
     const res = await getAllTasks();
     setTasks(res.data); 
   }

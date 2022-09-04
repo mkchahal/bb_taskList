@@ -14,7 +14,7 @@ const addTask = async (req, res) => {
   if (!title)
     return res
       .status(400)
-      .json({ Error: "Incorrect request body. Title required." });
+      .json({ Error: "Incorrect request body. Require title and content." });
 
   try {
     const task = await new Task(req.body).save();

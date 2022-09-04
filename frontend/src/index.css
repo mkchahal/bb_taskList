@@ -1,5 +1,9 @@
 @import '~antd/dist/antd.css';
 
+body {
+    background-color: #EFF2F5;
+}
+
 button {
     align-self: flex-end;
     max-width: 20rem;
