@@ -86,12 +86,12 @@ const App = () => {
           TO DO LIST
         </Title>
       </Header>
-      <Layout style={{ width: "60%", margin: "5rem auto", gap: "2rem" }}>
+      <Layout style={{ margin: "5rem auto", gap: "2rem" }}>
         <Button type="primary" shape="round" onClick={() => setIsAdding(true)}>
           + Add a new task
         </Button>
         <AddModal />
-        <Table columns={columns} dataSource={list} />
+        <Table columns={columns} dataSource={list} pagination={false}/>
         <EditModal id={activeTaskId}/>
       </Layout>
     </Layout>

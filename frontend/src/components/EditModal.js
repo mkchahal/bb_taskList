@@ -1,4 +1,4 @@
-import { Input, Modal } from "antd";
+import { Input, Modal, message, Form } from "antd";
 import { AppContext } from "../context/AppContext";
 import { useContext } from "react";
 import { updateTask } from "../utils/apiUtils";
@@ -21,31 +21,41 @@ export const EditModal = ({ id }) => {
     setContent("");
   };
 
+  const handleSubmission = async () => {
+    if (!title || !content)
+      return message.error("All the fields are required.", 2);
+    const res = await updateTask(id, title, content);
+    const newArr = [...tasks].map((obj) =>
+      obj._id === res.data._id ? res.data : obj
+    );
+    setTasks(newArr);
+    resetEditing();
+  };
+
   return (
     <Modal
       title="Edit Task"
       visible={isEditing}
       onCancel={() => resetEditing()}
       okText="Save"
-      onOk={async () => {
-        const res = await updateTask(id, title, content);
-        const newArr = [...tasks].map((obj) =>
-          obj._id === res.data._id ? res.data : obj
-        );
-        setTasks(newArr);
-        resetEditing();
-      }}
+      onOk={handleSubmission}
     >
-      <Input
-        value={title}
-        placeholder="Task"
-        onChange={(event) => setTitle(event.target.value)}
-      />
-      <Input
-        value={content}
-        placeholder="Additional Notes..."
-        onChange={(event) => setContent(event.target.value)}
-      />
+      <Form labelCol={{ span: 4 }}>
+        <Form.Item label="Title" required>
+          <Input
+            value={title}
+            placeholder="Task"
+            onChange={(event) => setTitle(event.target.value)}
+          />
+        </Form.Item>
+        <Form.Item label="Content" required>
+          <Input
+            value={content}
+            placeholder="Additional Notes..."
+            onChange={(event) => setContent(event.target.value)}
+          />
+        </Form.Item>
+      </Form>
     </Modal>
   );
 };
