@@ -29,10 +29,10 @@ export const EditModal = ({ id }) => {
       okText="Save"
       onOk={async () => {
         const res = await updateTask(id, title, content);
-        const newArr = [...tasks];
-        console.log(res.data)
-        newArr.map((obj) => (obj._id === res.data._id ? res.data : obj));
-        console.log(newArr);
+        const newArr = [...tasks].map((obj) =>
+          obj._id === res.data._id ? res.data : obj
+        );
+        setTasks(newArr);
         resetEditing();
       }}
     >
