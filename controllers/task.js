@@ -46,7 +46,7 @@ const editTask = async (req, res) => {
       .json({ Error: "Incorrect request body. Title required." });
 
   try {
-    const task = await Task.findOneAndUpdate({ _id: taskId }, req.body);
+    const task = await Task.findOneAndUpdate({ _id: taskId }, req.body, {new: true});
     res.json(task);
   } catch (error) {
     res.status(400).json({ Error: "Error updating the task." });

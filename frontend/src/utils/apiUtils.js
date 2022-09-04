@@ -21,6 +21,18 @@ export const addTask = async (title, content) => {
   }
 };
 
+export const updateTask = async (id, title, content) => {
+  try {
+    const response = await axios.put(`/task/${id}`, {
+      title,
+      content
+    });
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const deleteTask = async (task) => {
   try {
     const response = await axios.delete(`/task/${task._id}`);

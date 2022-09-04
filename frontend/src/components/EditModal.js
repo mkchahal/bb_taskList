@@ -1,10 +1,19 @@
 import { Input, Modal } from "antd";
 import { AppContext } from "../context/AppContext";
 import { useContext } from "react";
+import { updateTask } from "../utils/apiUtils";
 
-export const EditModal = () => {
-  const { title, setTitle, content, setContent, isEditing, setIsEditing } =
-    useContext(AppContext);
+export const EditModal = ({ id }) => {
+  const {
+    tasks,
+    setTasks,
+    title,
+    setTitle,
+    content,
+    setContent,
+    isEditing,
+    setIsEditing,
+  } = useContext(AppContext);
 
   const resetEditing = () => {
     setIsEditing(false);
@@ -18,7 +27,12 @@ export const EditModal = () => {
       visible={isEditing}
       onCancel={() => resetEditing()}
       okText="Save"
-      onOk={() => {
+      onOk={async () => {
+        const res = await updateTask(id, title, content);
+        const newArr = [...tasks];
+        console.log(res.data)
+        newArr.map((obj) => (obj._id === res.data._id ? res.data : obj));
+        console.log(newArr);
         resetEditing();
       }}
     >

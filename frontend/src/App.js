@@ -11,10 +11,9 @@ const { Title } = Typography;
 
 const App = () => {
 
+  const { setTitle, setContent, tasks, setTasks, setIsEditing, setIsAdding } = useContext(AppContext);
   const [list, setList] = useState([]);
-  const { setTitle, setContent, tasks, setTasks, setIsEditing, setIsAdding } =
-    useContext(AppContext);
-
+  const [activeTaskId, setActiveTaskId] = useState("");
 
   useEffect(() => {
     const listItems = [...tasks];
@@ -75,6 +74,7 @@ const App = () => {
     setIsEditing(true);
     setTitle(task.title);
     setContent(task.content);
+    setActiveTaskId(task._id);
   };
 
   return (
@@ -92,7 +92,7 @@ const App = () => {
         </Button>
         <AddModal />
         <Table columns={columns} dataSource={list} />
-        <EditModal />
+        <EditModal id={activeTaskId}/>
       </Layout>
     </Layout>
   );
