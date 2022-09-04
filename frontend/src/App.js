@@ -1,15 +1,22 @@
-import { useEffect, useState } from "react";
 import axios from "axios";
-import { Button, Modal, Table } from "antd";
+import { Button, Input, Modal, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { AppContext } from "./context/AppContext";
+import { useContext } from "react";
+import { deleteTask } from "./utils/apiUtils";
 
 const App = () => {
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [tasks, setTasks] = useState([]);
-  const dataSource = [...tasks].map(
-    (task) => (task.date = task.date.slice(0, 10))
-  );
+  const {
+    title, 
+    setTitle,
+    content,
+    setContent,
+    tasks,
+    setTasks,
+    isEditing,
+    setIsEditing,
+  } = useContext(AppContext);
+
   const columns = [
     {
       key: 1,
@@ -32,9 +39,9 @@ const App = () => {
       render: (task) => {
         return (
           <>
-            <EditOutlined />
+            <EditOutlined onClick={() => handleEditTask(task)} />
             <DeleteOutlined
-              onClick={() => handleDelete(task)}
+              onClick={() => handleDeleteTask(task)}
               style={{ color: "red", marginLeft: 12 }}
             />
           </>
@@ -43,14 +50,18 @@ const App = () => {
     },
   ];
 
-  useEffect(() => {
-    axios
-      .get("/task")
-      .then((res) => {
-        setTasks(res.data);
-      })
-      .catch((err) => console.error(err.message));
-  }, []);
+  const handleDeleteTask = (task) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this task?",
+      okText: "Yes",
+      okType: "danger",
+      onOk: () => {
+        const res = deleteTask(task);
+        const newArr = [...tasks].filter((task) => task._id !== res.data._id);
+        setTasks(newArr);
+      },
+    });
+  };
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -66,21 +77,16 @@ const App = () => {
       });
   };
 
-  const handleDelete = (task) => {
-    Modal.confirm({
-      title: "Are you sure you want to delete this task?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: () => {
-        axios
-          .delete(`/task/${task._id}`)
-          .then((res) => {
-            const newArr = [...tasks].filter((task) => task._id !== res.data._id);
-            setTasks(newArr);
-          })
-          .catch((err) => console.error(err));
-      }
-    })
+  const handleEditTask = (task) => {
+    setIsEditing(true);
+    setTitle(task.title);
+    setContent(task.content);
+  };
+
+  const resetEditing = () => {
+    setIsEditing(false);
+    setTitle("");
+    setContent("");
   };
 
   return (
@@ -103,6 +109,27 @@ const App = () => {
       </form>
       <Button type="onClick">+ Add a new task</Button>
       <Table columns={columns} dataSource={tasks} />
+      <Modal
+        title="Edit Task"
+        visible={isEditing}
+        onCancel={() => resetEditing()}
+        okText="Save"
+        onOk={(task) => {
+          console.log(task);
+          resetEditing();
+        }}
+      >
+        <Input
+          value={title}
+          placeholder="Task"
+          onChange={(event) => setTitle(event.target.value)}
+        />
+        <Input
+          value={content}
+          placeholder="Additional Notes..."
+          onChange={(event) => setContent(event.target.value)}
+        />
+      </Modal>
     </>
   );
 };
