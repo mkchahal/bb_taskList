@@ -8,6 +8,7 @@ export const AppProvider = ({ children }) => {
   const [content, setContent] = useState("");
   const [tasks, setTasks] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
+  const [isAdding, setIsAdding] = useState(false);
 
   const setTasksList = async() => {
     const res = await getAllTasks();
@@ -29,6 +30,8 @@ export const AppProvider = ({ children }) => {
         setTasks,
         isEditing,
         setIsEditing,
+        isAdding, 
+        setIsAdding
       }}
     >
       {children}

@@ -1,19 +1,19 @@
-import { Button, Input, Modal, Table } from "antd";
+import { Button, Modal, Table } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppContext } from "./context/AppContext";
 import { useContext } from "react";
-import { addTask, deleteTask } from "./utils/apiUtils";
+import { deleteTask } from "./utils/apiUtils";
+import { EditModal } from "./components/EditModal";
+import { AddModal } from "./components/AddModal";
 
 const App = () => {
   const {
-    title,
     setTitle,
-    content,
     setContent,
     tasks,
     setTasks,
-    isEditing,
     setIsEditing,
+    setIsAdding,
   } = useContext(AppContext);
 
   const columns = [
@@ -62,53 +62,18 @@ const App = () => {
     });
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-
-    const response = addTask(title, content);
-    setTasks([...tasks, response.data]);
-
-    setTitle("");
-    setContent("");
-  };
-
   const handleEditTask = (task) => {
     setIsEditing(true);
     setTitle(task.title);
     setContent(task.content);
   };
 
-  const resetEditing = () => {
-    setIsEditing(false);
-    setTitle("");
-    setContent("");
-  };
-
   return (
     <>
-      <Button type="onClick">+ Add a new task</Button>
+      <Button onClick={() => setIsAdding(true)}>+ Add a new task</Button>
+      <AddModal/>
       <Table columns={columns} dataSource={tasks} />
-      <Modal
-        title="Edit Task"
-        visible={isEditing}
-        onCancel={() => resetEditing()}
-        okText="Save"
-        onOk={(task) => {
-          console.log(task);
-          resetEditing();
-        }}
-      >
-        <Input
-          value={title}
-          placeholder="Task"
-          onChange={(event) => setTitle(event.target.value)}
-        />
-        <Input
-          value={content}
-          placeholder="Additional Notes..."
-          onChange={(event) => setContent(event.target.value)}
-        />
-      </Modal>
+      <EditModal/>
     </>
   );
 };
