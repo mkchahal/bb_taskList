@@ -1,11 +1,47 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Task } from "./components/Task";
+import { Button, Modal, Table } from "antd";
+import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 
-function App() {
+const App = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tasks, setTasks] = useState([]);
+  const dataSource = [...tasks].map(
+    (task) => (task.date = task.date.slice(0, 10))
+  );
+  const columns = [
+    {
+      key: 1,
+      title: "Title",
+      dataIndex: "title",
+    },
+    {
+      key: 2,
+      title: "Content",
+      dataIndex: "content",
+    },
+    {
+      key: 3,
+      title: "Date",
+      dataIndex: "date",
+    },
+    {
+      key: 4,
+      title: "Actions",
+      render: (task) => {
+        return (
+          <>
+            <EditOutlined />
+            <DeleteOutlined
+              onClick={() => handleDelete(task)}
+              style={{ color: "red", marginLeft: 12 }}
+            />
+          </>
+        );
+      },
+    },
+  ];
 
   useEffect(() => {
     axios
@@ -18,7 +54,6 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-
     axios
       .post("/task", {
         title,
@@ -29,6 +64,23 @@ function App() {
         setTitle("");
         setContent("");
       });
+  };
+
+  const handleDelete = (task) => {
+    Modal.confirm({
+      title: "Are you sure you want to delete this task?",
+      okText: "Yes",
+      okType: "danger",
+      onOk: () => {
+        axios
+          .delete(`/task/${task._id}`)
+          .then((res) => {
+            const newArr = [...tasks].filter((task) => task._id !== res.data._id);
+            setTasks(newArr);
+          })
+          .catch((err) => console.error(err));
+      }
+    })
   };
 
   return (
@@ -48,21 +100,11 @@ function App() {
           value={content}
           onChange={(event) => setContent(event.target.value)}
         ></textarea>
-        <button type="submit">+ Add a new task</button>
       </form>
-      <table>
-        <tr>
-          <th>Task</th>
-          <th>Content</th>
-          <th>Date</th>
-        </tr>
-        {tasks &&
-          tasks.map((task) => {
-            return <Task task={task} />;
-          })}
-      </table>
+      <Button type="onClick">+ Add a new task</Button>
+      <Table columns={columns} dataSource={tasks} />
     </>
   );
-}
+};
 
 export default App;
