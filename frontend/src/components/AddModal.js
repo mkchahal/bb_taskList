@@ -38,14 +38,14 @@ export const AddModal = () => {
       onOk={handleSubmission}
     >
       <Form labelCol={{ span: 4 }}>
-        <Form.Item label="Title" name="title" required>
+        <Form.Item label="Title" required>
           <Input
             value={title}
             placeholder="Task"
             onChange={(event) => setTitle(event.target.value)}
           />
         </Form.Item>
-        <Form.Item label="Content" name="content" required>
+        <Form.Item label="Content" required>
           <Input
             value={content}
             placeholder="Additional Notes..."

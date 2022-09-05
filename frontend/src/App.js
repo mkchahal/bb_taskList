@@ -10,15 +10,22 @@ const { Header } = Layout;
 const { Title } = Typography;
 
 const App = () => {
-
-  const { setTitle, setContent, tasks, setTasks, setIsEditing, setIsAdding } = useContext(AppContext);
+  const { setTitle, setContent, tasks, setTasks, setIsEditing, setIsAdding } =
+    useContext(AppContext);
   const [list, setList] = useState([]);
   const [activeTaskId, setActiveTaskId] = useState("");
 
   useEffect(() => {
     const listItems = [...tasks];
     listItems.map((item) => {
-      return Object.assign(item, { date: item.updatedAt.slice(0, 10) }, { key: item._id });
+      const dateVal = new Date(item.updatedAt);
+      return Object.assign(
+        item,
+        {
+          date: `${dateVal.toLocaleTimeString()} ${dateVal.toLocaleDateString()}`,
+        },
+        { key: item._id }
+      );
     });
     setList(listItems);
   }, [tasks]);
@@ -38,6 +45,7 @@ const App = () => {
       key: 3,
       title: "Date",
       dataIndex: "date",
+      sorter: (a,b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
     },
     {
       key: 4,
@@ -85,14 +93,13 @@ const App = () => {
           TO DO LIST
         </Title>
       </Header>
-      <Layout style={{ margin: "5rem auto", gap: "2rem"}}>
-        <Button shape="round">Sort by Date</Button>
+      <Layout style={{ margin: "5rem auto", gap: "2rem", minWidth: "60%" }}>
         <AddModal />
-        <Table columns={columns} dataSource={list} pagination={false}/>
+        <Table columns={columns} dataSource={list} pagination={false} />
         <Button type="primary" shape="round" onClick={() => setIsAdding(true)}>
-          Add a new task
+          + Add a new task
         </Button>
-        <EditModal id={activeTaskId}/>
+        <EditModal id={activeTaskId} />
       </Layout>
     </Layout>
   );
