@@ -6,6 +6,8 @@ This is a Task List web app to manage the tasks and related notes. The database 
 
 ## Demo
 
+https://user-images.githubusercontent.com/99150991/188508531-71894ac8-8bc1-4650-8187-cd045ca04743.mov
+
 ## Tech Stack
 
 ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
