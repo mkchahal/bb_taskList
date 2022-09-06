@@ -9,6 +9,15 @@ export const getAllTasks = async () => {
   }
 };
 
+export const getTask = async (id) => {
+  try {
+    const response = await axios.get(`/task/${id}`);
+    return response;
+  } catch (error) {
+    console.error(error);
+  }
+};
+
 export const addTask = async (title, content) => {
   try {
     const response = await axios.post("/task", {

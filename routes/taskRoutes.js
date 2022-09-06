@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { validateBody } = require("../validators/validator")
+const { validateReqBody } = require("../validators/validator")
 
 const {
   getAllTasks,
@@ -13,12 +13,12 @@ const {
 router
     .route("/")
     .get(getAllTasks)
-    .post(validateBody, addTask);
+    .post(validateReqBody, addTask);
 
 router
     .route("/:id")
     .get(getTask)
-    .put(validateBody, editTask)
+    .put( editTask)
     .delete(deleteTask);
 
 module.exports = router;

@@ -5,25 +5,31 @@ import { useContext, useEffect, useState } from "react";
 import { deleteTask } from "./utils/apiUtils";
 import { EditModal } from "./components/EditModal";
 import { AddModal } from "./components/AddModal";
+import { ViewModal } from "./components/ViewModal";
+import { updateDateFormat } from "./utils/conversionUtils";
 
 const { Header } = Layout;
 const { Title } = Typography;
 
 const App = () => {
-  const { setTitle, setContent, tasks, setTasks, setIsEditing, setIsAdding } =
-    useContext(AppContext);
+  const {
+    setTitle,
+    setContent,
+    tasks,
+    setTasks,
+    setIsEditing,
+    setIsAdding,
+    setIsViewing,
+  } = useContext(AppContext);
   const [list, setList] = useState([]);
   const [activeTaskId, setActiveTaskId] = useState("");
 
   useEffect(() => {
     const listItems = [...tasks];
     listItems.map((item) => {
-      const dateVal = new Date(item.updatedAt);
       return Object.assign(
         item,
-        {
-          date: `${dateVal.toLocaleTimeString()} ${dateVal.toLocaleDateString()}`,
-        },
+        {date: updateDateFormat(item.updatedAt)},
         { key: item._id }
       );
     });
@@ -45,7 +51,7 @@ const App = () => {
       key: 3,
       title: "Date",
       dataIndex: "date",
-      sorter: (a,b) => Date.parse(a.createdAt) - Date.parse(b.createdAt)
+      sorter: (a, b) => Date.parse(a.createdAt) - Date.parse(b.createdAt),
     },
     {
       key: 4,
@@ -53,9 +59,17 @@ const App = () => {
       render: (task) => {
         return (
           <>
-            <EditOutlined onClick={() => handleEditTask(task)} />
+            <EditOutlined
+              onClick={(event) => {
+                event.stopPropagation();
+                handleEditTask(task);
+              }}
+            />
             <DeleteOutlined
-              onClick={() => handleDeleteTask(task)}
+              onClick={(event) => {
+                event.stopPropagation();
+                handleDeleteTask(task);
+              }}
               style={{ color: "red", marginLeft: 12 }}
             />
           </>
@@ -95,7 +109,20 @@ const App = () => {
       </Header>
       <Layout style={{ margin: "5rem auto", gap: "2rem", minWidth: "60%" }}>
         <AddModal />
-        <Table columns={columns} dataSource={list} pagination={false} />
+        <Table
+          columns={columns}
+          dataSource={list}
+          pagination={false}
+          onRow={(task) => {
+            return {
+              onClick: () => {
+                setActiveTaskId(task._id);
+                setIsViewing(true);
+              },
+            };
+          }}
+        />
+        <ViewModal id={activeTaskId} setId={setActiveTaskId}/>
         <Button type="primary" shape="round" onClick={() => setIsAdding(true)}>
           + Add a new task
         </Button>

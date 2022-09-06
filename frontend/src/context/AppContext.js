@@ -9,6 +9,7 @@ export const AppProvider = ({ children }) => {
   const [tasks, setTasks] = useState([]);
   const [isEditing, setIsEditing] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
+  const [isViewing, setIsViewing] = useState(false);
 
   const setTasksList = async () => {
     const res = await getAllTasks();
@@ -31,7 +32,9 @@ export const AppProvider = ({ children }) => {
         isEditing,
         setIsEditing,
         isAdding, 
-        setIsAdding
+        setIsAdding,
+        isViewing, 
+        setIsViewing
       }}
     >
       {children}

@@ -1,4 +1,4 @@
-# Task List - Mobile 📝
+# Task List 📝
 
 ## Description
 
@@ -28,7 +28,7 @@ Install dependencies:
 
 ```
 $ npm install
-$ cd ../frontend
+$ cd frontend
 $ npm install
 ```
 
@@ -39,11 +39,12 @@ PORT = 4000
 MONGODB_URI = 'your mongoDB uri'
 ```
 
-Start running the client and the server:
+Start running the server and then the client:
 
 ```
-$ npm start
 $ cd ../
+$ npm start
+$ cd frontend
 $ npm start
 ```
 
