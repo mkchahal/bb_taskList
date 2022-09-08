@@ -4,6 +4,8 @@ import { getAllTasks } from "../utils/apiUtils";
 export const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
+
+  // Research custom hooks
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [tasks, setTasks] = useState([]);

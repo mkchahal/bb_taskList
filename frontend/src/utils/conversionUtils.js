@@ -1,4 +1,6 @@
+import moment from "moment";
+
 export const updateDateFormat = (timestamp) => {
-  const dateVal = new Date(timestamp);
-  return `${dateVal.toLocaleTimeString()} ${dateVal.toLocaleDateString()}`; // use moment.js instead
+  return moment(timestamp, moment.ISO_8601).format('LT L');
 };
+
