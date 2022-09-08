@@ -2,7 +2,7 @@ const Task = require("../models/task");
 
 const getAllTasks = async (_req, res) => {
   try {
-    const tasks = await Task.find();
+    const tasks = await Task.find(); //TODO: sort by params
     res.json(tasks);
   } catch (error) {
     res.status(400).json({ Error: error.message });

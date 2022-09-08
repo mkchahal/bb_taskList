@@ -1,7 +1,7 @@
 import { Button, Modal, Table, Layout, Typography } from "antd";
 import { EditOutlined, DeleteOutlined } from "@ant-design/icons";
 import { AppContext } from "./context/AppContext";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { deleteTask } from "./utils/apiUtils";
 import { EditModal } from "./components/EditModal";
 import { AddModal } from "./components/AddModal";
@@ -30,7 +30,7 @@ const App = () => {
       return Object.assign(
         item,
         {date: updateDateFormat(item.updatedAt)},
-        { key: item._id }
+        {key: item._id }
       );
     });
     setList(listItems);
@@ -78,7 +78,7 @@ const App = () => {
     },
   ];
 
-  const handleDeleteTask = (task) => {
+  const handleDeleteTask = useCallback((task) => {
     Modal.confirm({
       title: "Are you sure you want to delete this task?",
       okText: "Yes",
@@ -89,14 +89,14 @@ const App = () => {
         setTasks(newArr);
       },
     });
-  };
+  }, [tasks, setTasks]);
 
-  const handleEditTask = (task) => {
+  const handleEditTask = useCallback((task) => {
     setIsEditing(true);
     setTitle(task.title);
     setContent(task.content);
     setActiveTaskId(task._id);
-  };
+  }, [setIsEditing, setTitle, setContent]);
 
   return (
     <Layout>
