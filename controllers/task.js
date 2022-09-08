@@ -1,9 +1,16 @@
 const Task = require("../models/task");
 
-const getAllTasks = async (_req, res) => {
+const getAllTasks = async (req, res) => {
+  const { sortByDate } = req.query;
+  const obj = {};
+
+  if (sortByDate) {
+    const value = sortByDate === "desc" ? -1 : 1;
+    obj.createdAt = value;
+  }
+
   try {
-    const tasks = await Task.find(); //TODO: sort by params
-    res.json(tasks);
+    const tasks = await Task.find().sort(obj);
   } catch (error) {
     res.status(400).json({ Error: error.message });
   }
