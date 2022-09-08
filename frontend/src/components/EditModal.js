@@ -1,6 +1,6 @@
 import { Input, Modal, message, Form } from "antd";
 import { AppContext } from "../context/AppContext";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { updateTask } from "../utils/apiUtils";
 
 export const EditModal = ({ id }) => {
@@ -15,11 +15,11 @@ export const EditModal = ({ id }) => {
     setIsEditing,
   } = useContext(AppContext);
 
-  const resetEditing = () => {
+  const resetEditing = useCallback(() => {
     setIsEditing(false);
     setTitle("");
     setContent("");
-  };
+  }, [setIsEditing, setTitle, setContent]);
 
   const handleSubmission = async () => {
     if (!title || !content)
@@ -36,7 +36,7 @@ export const EditModal = ({ id }) => {
     <Modal
       title="Edit Task"
       visible={isEditing}
-      onCancel={() => resetEditing()}
+      onCancel={resetEditing}
       okText="Save"
       onOk={handleSubmission}
     >

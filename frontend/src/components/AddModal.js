@@ -1,6 +1,6 @@
 import { Input, Modal, message, Form } from "antd";
 import { AppContext } from "../context/AppContext";
-import { useContext } from "react";
+import { useCallback, useContext } from "react";
 import { addTask } from "../utils/apiUtils";
 
 export const AddModal = () => {
@@ -15,11 +15,11 @@ export const AddModal = () => {
     setIsAdding,
   } = useContext(AppContext);
 
-  const resetAdding = () => {
+  const resetAdding = useCallback(() => {
     setIsAdding(false);
     setTitle("");
     setContent("");
-  };
+  }, [setIsAdding, setTitle, setContent]);
 
   const handleSubmission = async () => {
     if (!title || !content)
@@ -33,7 +33,7 @@ export const AddModal = () => {
     <Modal
       title="Add Task"
       visible={isAdding}
-      onCancel={() => resetAdding()}
+      onCancel={resetAdding}
       okText="Save"
       onOk={handleSubmission}
     >
